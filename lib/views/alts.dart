@@ -1,13 +1,22 @@
+import 'package:cryptos101/services/networking.dart';
 import 'package:flutter/material.dart';
 
 class altsView extends StatefulWidget {
-  const altsView({ Key? key }) : super(key: key);
 
   @override
   State<altsView> createState() => _altsViewState();
 }
 
 class _altsViewState extends State<altsView> {
+
+
+@override
+  void initState() {
+    super.initState();
+    print('is this working');
+    getCoinRates();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
