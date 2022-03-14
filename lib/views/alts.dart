@@ -8,13 +8,13 @@ class altsView extends StatefulWidget {
 }
 
 class _altsViewState extends State<altsView> {
-
+  late Future<CoinData> currentData;
 
 @override
   void initState() {
     super.initState();
     print('is this working');
-    getCoinRates();
+    currentData = getCoinRates();
   }
 
   @override
@@ -24,60 +24,113 @@ class _altsViewState extends State<altsView> {
         title: Text('ALTS'),
       ),
       body: Center(
-        child: InteractiveViewer(
-          constrained: false,
-          child: DataTable(
-                columns: [
-                DataColumn(label: Text('COIN')),
-                DataColumn(label: Text('DATE')),
-                DataColumn(label: Text('AMOUNT')),
-                DataColumn(label: Text('THEN')),
-                DataColumn(label: Text('NOW')),
-                DataColumn(label: Text('GAIN?')),
-              ],
-              rows: [
-                DataRow(cells: [
-                  DataCell(Text('LUNA')),
-                  DataCell(Text('22/02/22')), 
-                  DataCell(Text('5.30LUNA')),
-                  DataCell(Text('399.63')), 
-                  DataCell(Text('-')), //take coin api data here
-                  DataCell(Text('-')),
-                ]),
-                DataRow(cells: [
-                  DataCell(Text('DOT')),
-                  DataCell(Text('22/02/22')),
-                  DataCell(Text('15.70DOT')), //current price coin api goes here
-                  DataCell(Text('402.63')),
-                  DataCell(Text('-')),
-                  DataCell(Text('-')),
-                ]),
-                DataRow(cells: [
-                  DataCell(Text('SOLANA')),
-                  DataCell(Text('22/02/22')),
-                  DataCell(Text('3.3SOL')),
-                  DataCell(Text('447.70')),
-                  DataCell(Text('-')),
-                  DataCell(Text('-')),
-                ]),
-                DataRow(cells: [
-                  DataCell(Text('FANTOM')),
-                  DataCell(Text('22/02/22')), 
-                  DataCell(Text('174FTM')),
-                  DataCell(Text('402.96')), 
-                  DataCell(Text('-')), //take coin api data here
-                  DataCell(Text('-')),
-                ]),
-                DataRow(cells: [
-                  DataCell(Text('POLYGON')),
-                  DataCell(Text('22/02/22')), 
-                  DataCell(Text('188MATIC')),
-                  DataCell(Text('400.83')), 
-                  DataCell(Text('-')), //take coin api data here
-                  DataCell(Text('-')),
-                ]),
-            ],
-          )
+        child: FutureBuilder<CoinData>(
+          future: currentData,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              // LUNA/TERRA:
+              double lunaQuantity = 2.80; //how much Luna i bought, the quantity in Luna $
+              double luna22_2_22= 399.63;   //Price of my Luna on this date in NZD
+              double lunaRate = snapshot.data!.rate; //Rate of Luna today in NZD
+              double lunaNow = lunaQuantity*lunaRate;  //Price of my Luna today
+              double lunaChange = lunaNow - luna22_2_22; //gain or loss?
+
+              // POLKADOT:
+              double dotQuantity = 15.70; //how much Luna i bought, the quantity in Luna $
+              double dot22_2_22= 402.63;   //Price of my Luna on this date in NZD
+              double dotRate = snapshot.data!.rate; //Rate of Luna today in NZD
+              double dotNow = dotQuantity*dotRate;  //Price of my Luna today
+              double dotChange = dotNow - dot22_2_22; //gain or loss?
+
+             
+
+              // SOLANA:
+              double solQuantity = 3.30; //how much Luna i bought, the quantity in sol $
+              double sol22_2_22= 447.70;   //Price of my Luna on this date in NZD
+              double solRate = snapshot.data!.rate; //Rate of Luna today in NZD
+              double solNow = solQuantity*solRate;  //Price of my Luna today
+              double solChange = solNow - sol22_2_22; //gain or loss?
+
+              // FANTOM:
+              double ftmQuantity = 174; //how much Luna i bought, the quantity in Luna $
+              double ftm22_2_22= 402.96;   //Price of my Luna on this date in NZD
+              double ftmRate = snapshot.data!.rate; //Rate of Luna today in NZD
+              double ftmNow = ftmQuantity*ftmRate;  //Price of my Luna today
+              double ftmChange = ftmNow - ftm22_2_22; //gain or loss?
+
+               // POLYGON/MATTIC:
+              double polyQuantity = 188; //how much Luna i bought, the quantity in Luna $
+              double poly22_2_22= 400.83;   //Price of my Luna on this date in NZD
+              double polyRate = snapshot.data!.rate; //Rate of Luna today in NZD
+              double polyNow = polyQuantity*polyRate;  //Price of my Luna today
+              double polyChange = polyNow - poly22_2_22; //gain or loss?
+
+
+
+
+
+
+
+              return InteractiveViewer(
+                constrained: false,
+                child: DataTable(
+                          columns: [
+                          DataColumn(label: Text('COIN')),
+                          DataColumn(label: Text('DATE')),
+                          DataColumn(label: Text('AMOUNT')),
+                          DataColumn(label: Text('THEN')),
+                          DataColumn(label: Text('NOW')),
+                          DataColumn(label: Text('GAIN?')),
+                        ],
+                        rows: [
+                          DataRow(cells: [
+                            DataCell(Text('LUNA')),
+                            DataCell(Text('22/02/22')), 
+                            DataCell(Text('${lunaQuantity.toStringAsFixed(2)} LUNA')),
+                            DataCell(Text('\$${luna22_2_22.toStringAsFixed(2)}')), 
+                            DataCell(Text('\$${lunaNow.toStringAsFixed(2)}')),
+                            DataCell(Text('\$${lunaChange.toStringAsFixed(2)}')),
+                          ]),
+                          DataRow(cells: [
+                            DataCell(Text('DOT')),
+                            DataCell(Text('22/02/22')),
+                            DataCell(Text('${dotQuantity.toStringAsFixed(2)} DOT')),
+                            DataCell(Text('\$${dot22_2_22.toStringAsFixed(2)}')), 
+                            DataCell(Text('\$${dotNow.toStringAsFixed(2)}')),
+                            DataCell(Text('\$${dotChange.toStringAsFixed(2)}')),
+                          ]),
+                          DataRow(cells: [
+                            DataCell(Text('SOLANA')),
+                            DataCell(Text('22/02/22')),
+                            DataCell(Text('${solQuantity.toStringAsFixed(2)} SOL')),
+                            DataCell(Text('\$${sol22_2_22.toStringAsFixed(2)}')), 
+                            DataCell(Text('\$${solNow.toStringAsFixed(2)}')),
+                            DataCell(Text('\$${solChange.toStringAsFixed(2)}')),
+                          ]),
+                          DataRow(cells: [
+                            DataCell(Text('FANTOM')),
+                            DataCell(Text('22/02/22')), 
+                            DataCell(Text('${ftmQuantity.toStringAsFixed(2)} FTM')),
+                            DataCell(Text('\$${ftm22_2_22.toStringAsFixed(2)}')), 
+                            DataCell(Text('\$${ftmNow.toStringAsFixed(2)}')),
+                            DataCell(Text('\$${ftmChange.toStringAsFixed(2)}')),
+                          ]),
+                          DataRow(cells: [
+                            DataCell(Text('POLYGON')),
+                            DataCell(Text('22/02/22')), 
+                            DataCell(Text('${polyQuantity.toStringAsFixed(2)} MATIC')),
+                            DataCell(Text('\$${poly22_2_22.toStringAsFixed(2)}')), 
+                            DataCell(Text('\$${polyNow.toStringAsFixed(2)}')),
+                            DataCell(Text('\$${polyChange.toStringAsFixed(2)}')),
+                          ]),
+                      ],
+                )
+              );
+              } else if (snapshot.hasError) {
+                return Text('${snapshot.error}');
+                }
+                return const CircularProgressIndicator();
+                }
         )
       )
     );
