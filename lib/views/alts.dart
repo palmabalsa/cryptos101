@@ -1,3 +1,6 @@
+import 'dart:ffi';
+
+import 'package:async/async.dart';
 import 'package:cryptos101/services/networking.dart';
 import 'package:flutter/material.dart';
 
@@ -8,13 +11,20 @@ class altsView extends StatefulWidget {
 }
 
 class _altsViewState extends State<altsView> {
-  late Future<CoinData> currentData;
+  late Future<CoinData> lunaData;
+  late Future<CoinData> dotData;
+
+  // FFUTURES:
+  // late Future<dynamic> today; 
 
 @override
   void initState() {
     super.initState();
     print('is this working');
-    currentData = getCoinRates();
+    // today = ffutures();
+    lunaData = getCoinRates();
+    dotData = getDotRates();
+
   }
 
   @override
@@ -25,13 +35,17 @@ class _altsViewState extends State<altsView> {
       ),
       body: Center(
         child: FutureBuilder<CoinData>(
-          future: currentData,
-          builder: (context, snapshot) {
+          future: lunaData,
+          builder: (context, snapshot)
+          {
+          
+
             if (snapshot.hasData) {
               // LUNA/TERRA:
               double lunaQuantity = 2.80; //how much Luna i bought, the quantity in Luna $
               double luna22_2_22= 399.63;   //Price of my Luna on this date in NZD
               double lunaRate = snapshot.data!.rate; //Rate of Luna today in NZD
+              // double lunaRate1 = lunaRate.toDouble();
               double lunaNow = lunaQuantity*lunaRate;  //Price of my Luna today
               double lunaChange = lunaNow - luna22_2_22; //gain or loss?
 
@@ -39,15 +53,15 @@ class _altsViewState extends State<altsView> {
               double dotQuantity = 15.70; //how much Luna i bought, the quantity in Luna $
               double dot22_2_22= 402.63;   //Price of my Luna on this date in NZD
               double dotRate = snapshot.data!.rate; //Rate of Luna today in NZD
+              // double dotRate1 = dotRate.toDouble();
               double dotNow = dotQuantity*dotRate;  //Price of my Luna today
-              double dotChange = dotNow - dot22_2_22; //gain or loss?
-
-             
+              double dotChange = dotNow - dot22_2_22; //gain or loss
 
               // SOLANA:
               double solQuantity = 3.30; //how much Luna i bought, the quantity in sol $
               double sol22_2_22= 447.70;   //Price of my Luna on this date in NZD
               double solRate = snapshot.data!.rate; //Rate of Luna today in NZD
+              // double solRate1 = solRate.toDouble();
               double solNow = solQuantity*solRate;  //Price of my Luna today
               double solChange = solNow - sol22_2_22; //gain or loss?
 
@@ -55,6 +69,7 @@ class _altsViewState extends State<altsView> {
               double ftmQuantity = 174; //how much Luna i bought, the quantity in Luna $
               double ftm22_2_22= 402.96;   //Price of my Luna on this date in NZD
               double ftmRate = snapshot.data!.rate; //Rate of Luna today in NZD
+              // double ftmRate1 = ftmRate.toDouble(); //Rate of Luna today in NZD
               double ftmNow = ftmQuantity*ftmRate;  //Price of my Luna today
               double ftmChange = ftmNow - ftm22_2_22; //gain or loss?
 
@@ -62,14 +77,9 @@ class _altsViewState extends State<altsView> {
               double polyQuantity = 188; //how much Luna i bought, the quantity in Luna $
               double poly22_2_22= 400.83;   //Price of my Luna on this date in NZD
               double polyRate = snapshot.data!.rate; //Rate of Luna today in NZD
+              // double polyRate1 = polyRate.toDouble();
               double polyNow = polyQuantity*polyRate;  //Price of my Luna today
               double polyChange = polyNow - poly22_2_22; //gain or loss?
-
-
-
-
-
-
 
               return InteractiveViewer(
                 constrained: false,
@@ -77,11 +87,11 @@ class _altsViewState extends State<altsView> {
                           columns: [
                           DataColumn(label: Text('COIN')),
                           DataColumn(label: Text('DATE')),
-                          DataColumn(label: Text('AMOUNT')),
+                          DataColumn(label: Text('#')),
                           DataColumn(label: Text('THEN')),
                           DataColumn(label: Text('NOW')),
                           DataColumn(label: Text('GAIN?')),
-                        ],
+                          ],
                         rows: [
                           DataRow(cells: [
                             DataCell(Text('LUNA')),
@@ -129,8 +139,10 @@ class _altsViewState extends State<altsView> {
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
                 }
-                return const CircularProgressIndicator();
-                }
+                else {
+            return const CircularProgressIndicator();
+            }
+          } 
         )
       )
     );
