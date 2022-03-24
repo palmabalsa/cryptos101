@@ -1,5 +1,3 @@
-import 'dart:ffi';
-import 'package:async/async.dart';
 import 'package:cryptos101/services/networking.dart';
 import 'package:flutter/material.dart';
 

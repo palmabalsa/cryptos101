@@ -1,6 +1,40 @@
 import 'dart:convert';
-import 'package:async/async.dart';
 import 'package:http/http.dart' as http;
+
+
+Future<CoinData> getBtcRates() async {
+
+  var apiUrl = 'https://rest.coinapi.io/v1/exchangerate/BTC/NZD?apikey=5FD2E560-74A0-413D-A23D-F908EA582C1C';
+
+  var response = await http.get(Uri.parse(apiUrl));
+
+  if (response.statusCode == 200){
+    CoinData btcData = CoinData.fromJson(jsonDecode(response.body));
+    print (btcData.rate);
+    return btcData;
+  }
+
+  else {
+    print (response.statusCode);
+    throw Exception('error : ${response.statusCode}');
+  }
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Future<List<double>> getAltRates() async {
   String coinApiKey = '5FD2E560-74A0-413D-A23D-F908EA582C1C';
@@ -26,7 +60,7 @@ Future<List<double>> getAltRates() async {
     
     } else {
       print(response.statusCode);
-      throw Exception('error in your request');
+      throw Exception('there is an error in your request. HTTP: ${response.statusCode}');
     }
   }
   print (coinRates);
