@@ -2,40 +2,29 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 
-Future<CoinData> getBtcRates() async {
 
-  var apiUrl = 'https://rest.coinapi.io/v1/exchangerate/BTC/NZD?apikey=5FD2E560-74A0-413D-A23D-F908EA582C1C';
+// api call for BTC and ETH coin Rate:::::::
+Future<CoinData> getCoinRates(String coin) async {
+  
+  String cryptoCoin = '';
+  coin == 'BTC' ? cryptoCoin = 'BTC': cryptoCoin = 'ETH';
+  var apiUrl = 'https://rest.coinapi.io/v1/exchangerate/$cryptoCoin/NZD?apikey=5FD2E560-74A0-413D-A23D-F908EA582C1C';
 
   var response = await http.get(Uri.parse(apiUrl));
 
   if (response.statusCode == 200){
-    CoinData btcData = CoinData.fromJson(jsonDecode(response.body));
-    print (btcData.rate);
-    return btcData;
+    CoinData coinRate = CoinData.fromJson(jsonDecode(response.body));
+    print (coinRate.rate);
+    return coinRate;
   }
 
   else {
     print (response.statusCode);
     throw Exception('error : ${response.statusCode}');
   }
-  
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// API CALL FOR ALTS, RETURN ALL COIN RATES FROM ONE FUTURE CALL
 Future<List<double>> getAltRates() async {
   String coinApiKey = '5FD2E560-74A0-413D-A23D-F908EA582C1C';
   List<String> cryptosList = ['LUNA', 'DOT', 'SOL', 'FTM', 'MATIC'];
@@ -66,6 +55,12 @@ Future<List<double>> getAltRates() async {
   print (coinRates);
   return coinRates;
 }
+
+
+
+
+
+
 
 
 class CoinData {

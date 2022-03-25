@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cryptos101/services/networking.dart';
-import 'package:async/async.dart';
 
 class btcView extends StatefulWidget {
 
@@ -15,7 +14,7 @@ class _btcViewState extends State<btcView> {
   @override
   void initState() {
     super.initState();
-    btcNow = getBtcRates();
+    btcNow = getCoinRates('BTC');
   }
 
 
