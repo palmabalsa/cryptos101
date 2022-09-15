@@ -1,5 +1,4 @@
 // ignore_for_file: prefer_const_constructors
-
 import 'package:cryptos101/themes.dart';
 import 'package:cryptos101/views/alts.dart';
 import 'package:cryptos101/views/btc.dart';
@@ -7,8 +6,14 @@ import 'package:cryptos101/views/eth.dart';
 import 'package:cryptos101/views/rate_calculator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons_null_safety/flutter_icons_null_safety.dart';
+import 'package:flutter_config/flutter_config.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await FlutterConfig.loadEnvVariables();
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override

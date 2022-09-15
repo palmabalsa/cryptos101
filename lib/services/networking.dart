@@ -1,15 +1,17 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter_config/flutter_config.dart';
+
+String apiKey = FlutterConfig.get('APIKEY');
 
 Future<CoinData> getCoinRates(String crypto, String fiat) async {
   var apiUrl =
-      'https://rest.coinapi.io/v1/exchangerate/$crypto/$fiat?apikey=5FD2E560-74A0-413D-A23D-F908EA582C1C';
+      'https://rest.coinapi.io/v1/exchangerate/$crypto/$fiat?apikey=$apiKey';
 
   var response = await http.get(Uri.parse(apiUrl));
 
   if (response.statusCode == 200) {
     CoinData coinRate = CoinData.fromJson(jsonDecode(response.body));
-    print(coinRate.rate);
     return coinRate;
   } else {
     print(response.statusCode);
@@ -18,24 +20,21 @@ Future<CoinData> getCoinRates(String crypto, String fiat) async {
 }
 
 Future<List<double>> getAltRates() async {
-  String coinApiKey = '5FD2E560-74A0-413D-A23D-F908EA582C1C';
   List<String> cryptosList = ['LUNA', 'DOT', 'SOL', 'FTM', 'MATIC'];
   List<String> cryptoUrls = [];
 
   for (String crypto in cryptosList) {
     var newUrl =
-        'https://rest.coinapi.io/v1/exchangerate/$crypto/NZD?apikey=$coinApiKey';
+        'https://rest.coinapi.io/v1/exchangerate/$crypto/NZD?apikey=$apiKey';
     cryptoUrls.add(newUrl);
   }
 
   List<double> coinRates = [];
-
   for (String cryptoUrl in cryptoUrls) {
     var response = await http.get(Uri.parse(cryptoUrl));
 
     if (response.statusCode == 200) {
       CoinData coinData = CoinData.fromJson(jsonDecode(response.body));
-      print(coinData.rate);
       double rateNow = coinData.rate.toDouble();
       coinRates.add(rateNow);
     } else {
@@ -44,7 +43,6 @@ Future<List<double>> getAltRates() async {
           'there is an error in your request. HTTP: ${response.statusCode}');
     }
   }
-  print(coinRates);
   return coinRates;
 }
 
@@ -58,7 +56,6 @@ class CoinData {
       rate: json['rate'],
     );
   }
-
   Map<String, dynamic> toJson() => {
         'rate': rate,
       };
